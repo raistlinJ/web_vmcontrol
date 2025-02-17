@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Executor</title>
+    <script>
+        // Function to send the form data to the server via fetch
+        async function submitForm() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const command = document.getElementById("command").value;
+
+            const data = { username: username, password: password, command: command };
+
+            const response = await fetch("run_command", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.status === 200) {
+                document.getElementById("output").textContent = "Command output:\n" + result.output;
+            } else {
+                document.getElementById("output").textContent = "Error:\n" + result.error;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Command Executor</h1>
+
+    <form onsubmit="event.preventDefault(); submitForm();">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="command">Command:</label><br>
+        <input type="text" id="command" name="command" required><br><br>
+
+        <button type="submit">Run Command</button>
+    </form>
+
+    <h2>Output</h2>
+    <pre id="output"></pre>
+</body>
+</html>
+
